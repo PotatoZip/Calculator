@@ -1,56 +1,62 @@
 from tkinter import *
+from tkinter import messagebox
+import math
 
 equation_text = ""
 first_part = ""
 
 def button(btn):
     global equation_text
-    
-    equation_text = equation_text + str(btn)
+    global first_part
+    equation_text += str(btn)
+    first_part += str(btn)
     equation_label.set(equation_text)
 
 def result(btn):
     global equation_text
     global first_part
-   
-    
-    if btn == "=":
-        first_part = first_part + equation_text
-        equals = str(eval(first_part))
-        equation_text = equals
-        equation_label.set(equals) 
-    elif btn == "+":
-        first_part = equation_text + "+"
-        clear()
-    elif btn == "-":
-        first_part = equation_text + "-"
-        clear()
-    elif btn == "x":
-        first_part = equation_text + "*"
-        clear()
-    elif btn == "÷":
-        first_part = equation_text + "/"
-        clear()
-    elif btn == ".":
-        first_part = equation_text + "."
-        clear()
-    elif btn == "+/-":
-        first_part = "-" + equation_text
-        clear()
-    elif btn == "%":
-        first_part = equation_text
-        clear()
-    elif btn == "√":
-        first_part = equation_text + "^(1/2)"
-        clear()
-    
-    
-    elif btn == "C":
+
+    if btn == "C":
         first_part = ""
         equation_text = ""
         equation_label.set("")
+        return
+    try:
+        equals = str(eval(first_part))
+        equation_label.set(equals)
 
+        if btn == "=":
+            show() 
+        elif btn == "+":
+            first_part += "+"
+            equation_text = ""
+        elif btn == "-":
+            first_part += "-"
+            equation_text = ""
+        elif btn == "x":
+            first_part += "*"
+            equation_text = ""
+        elif btn == "÷":
+            first_part += "/"
+            equation_text = ""
+        elif btn == "+/-":
+            first_part = "(-1)*(" + first_part + ")"
+            show()
+        elif btn == "%":
+            pass
+        elif btn == "√":
+            first_part = "math.sqrt(" + equation_text + ")"
+            show()
+    except:
+        messagebox.showinfo("Error")
     
+def show():
+    global first_part
+    global equation_text
+    equals = str(eval(first_part))
+    equation_label.set(equals)
+    equation_text = equals
+    equation_label.set(equals)
 
 def clear():
     global equation_text
@@ -66,8 +72,9 @@ window.title("Calculator")
 window.configure(background = "#424949")
 
 equation_label = StringVar()
-label = Label(window, textvariable= equation_label, width = 35, height = 3, font = ('consolas'), relief = SUNKEN, bd = 5)
+label = Label(window, textvariable = equation_label, width = 35, height = 3, font = ('consolas'), relief = SUNKEN, bd = 5)
 label.pack(side="top", padx = 10, pady = 10)
+
 
 frame = Frame(window)
 frame.pack()
@@ -92,7 +99,7 @@ button8 = Button(frame, text = 8, width = 5, height = 2, font = 20, command = la
 button8.grid(row = 1, column = 1)
 button9 = Button(frame, text = 9, width = 5, height = 2, font = 20, command = lambda: button(9))
 button9.grid(row = 1, column = 2)
-button_dot = Button(frame, text = '.', width = 5, height = 2, font = 20, command = button(10))
+button_dot = Button(frame, text = '.', width = 5, height = 2, font = 20, command = lambda: button('.'))
 button_dot.grid(row = 4, column = 1)
 button_equals = Button(frame, text = '=', width = 5, height = 2, font = 20, command = lambda: result('='))
 button_equals.grid(row = 4, column = 2)
